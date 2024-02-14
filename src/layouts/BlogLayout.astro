@@ -1,0 +1,29 @@
+---
+import Layout from './Layout.astro';
+import Searchbox from "../components/blog/Searchbox";
+import CategoryFilter from "../components/blog/CategoryFilter";
+---
+
+<Layout title="Welcome to Astro.">
+  <div class="relative z-10 container pt-40 xl:pt-96">
+    <div class="grid justify-items-center">
+      <div class="grid gap-4 content-center lg:gap-6">
+        <h1
+          class="text-center whitespace-pre-wrap text-slate text-4xl font-medium lg:text-7xl lg:leading-normal"
+        >
+          Explore the latest insights from Cryptobunq
+        </h1>
+        <p
+          class="whitespace-pre-wrap text-slate text-center font-light text-xl lg:text-2xl"
+        >
+          Stay up-to-date with the latest news and updates on EURK and the cryptocurrency industry.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="container relative z-10 w-full mt-16">
+    <Searchbox data={[]} gotoPost={(path) => { console.log(path) }} client:visible />
+    <CategoryFilter client:visible />
+  </div>
+  <slot />
+</Layout>

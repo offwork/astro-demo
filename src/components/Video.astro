@@ -1,0 +1,40 @@
+---
+import type { ObjectFit, ObjectPosition } from "../models";
+
+type BackgroundVideoProps = {
+  fit?: ObjectFit;
+  position?: ObjectPosition;
+  styles?: string;
+};
+
+const { fit, position, styles } = Astro.props;
+---
+
+<div>
+  <video
+    loop
+    muted
+    autoplay
+    playsinline
+    style={{
+      objectFit: fit || "cover",
+      objectPosition: position,
+    }}
+    class={`${styles} absolute z-0 top-1/2 left-1/2 w-full h-full -translate-y-1/2 -translate-x-1/2 lg:hidden`}
+  >
+    <source src="/videos/cryptobunq-bg-desktop.mp4" type="video/mp4" />
+  </video>
+  <video
+    loop
+    muted
+    autoplay
+    playsinline
+    style={{
+      objectFit: fit || "cover",
+      objectPosition: position,
+    }}
+    class={`${styles} hidden absolute z-0 top-1/2 left-1/2 w-full h-full -translate-y-1/2 -translate-x-1/2 lg:block`}
+  >
+    <source src="/videos/cryptobunq-bg-desktop.webm" type="video/webm" />
+  </video>
+</div>

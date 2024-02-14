@@ -1,0 +1,14 @@
+---
+import BlogLayout from '../../layouts/BlogLayout.astro';
+import Searchbox from "../../components/blog/Searchbox";
+import CategoryFilter from "../../components/blog/CategoryFilter";
+---
+
+<BlogLayout title="Welcome to Astro.">
+	<Fragment slot="searchbox">
+		<Searchbox data={[]} gotoPost={(path) => { console.log(path) }} client:visible />
+	</Fragment>
+	<Fragment slot="categories">
+		<CategoryFilter client:visible />
+	</Fragment>
+</BlogLayout>

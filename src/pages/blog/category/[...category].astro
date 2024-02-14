@@ -1,0 +1,37 @@
+---
+import BlogLayout from '../../../layouts/BlogLayout.astro';
+import { Categories, PER_PAGE_SIZE } from "../../../constants";
+import { getBlogCategoryPots, getCategoryHeroPots } from "../../../lib/graphql-fetch";
+
+const { category } = Astro.params;
+const catSlug = category ? category.split("/")[0] : "";
+if (!Categories.map((cat) => cat.slug).includes(catSlug)) {
+  return Astro.redirect("/404");
+}
+
+const pageNum =
+  Number(category?.split("/")[1]) === 2
+    ? PER_PAGE_SIZE
+    : Number(category?.split("/")[1]) * PER_PAGE_SIZE - PER_PAGE_SIZE;
+
+if (isNaN(pageNum) || pageNum < 0) return Astro.redirect("/404");
+
+const postsResult = await getBlogCategoryPots(
+  PER_PAGE_SIZE,
+  Number(category?.split("/")[1]) === 1 ? 0 : pageNum,
+  "date_ASC",
+  catSlug
+);
+
+const { aggregate } = postsResult.postsConnection;
+const pages = Math.ceil(aggregate.count / PER_PAGE_SIZE);
+const heroPostsResult = await getCategoryHeroPots(catSlug);
+const posts = postsResult.postsConnection.edges.map((post) => post.node);
+console.log(posts);
+---
+
+<BlogLayout title="Welcome to Astro.">
+  <div class="container">
+
+  </div>
+</BlogLayout>
