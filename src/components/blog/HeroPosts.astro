@@ -1,0 +1,22 @@
+---
+import type { PostCard } from "../../models";
+import BlogPostCard from "../../components/blog/BlogPostCard.astro";
+
+type Props = {
+  tag?: string;
+  heroPosts: PostCard[];
+};
+
+const { heroPosts, tag } = Astro.props;
+---
+
+<Fragment>
+  {heroPosts && (
+    <div class="grid grid-rows-1 justify-items-stretch gap-5 mt-20 lg:grid-cols-2">
+      {heroPosts.map(
+        (post, idx) =>
+          idx < 2 && <BlogPostCard {...post} />
+      )}
+    </div>
+  )}
+</Fragment>

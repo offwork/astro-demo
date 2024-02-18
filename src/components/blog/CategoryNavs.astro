@@ -1,0 +1,38 @@
+---
+import { Categories } from "../../constants";
+import { classNames } from "../../utils";
+
+const pathname = new URL(Astro.request.url).pathname;
+const currentPath = pathname.slice(1);
+---
+
+<nav
+  class="flex overflow-y-hidden w-full justify-start items-center gap-2 mt-20 py-4 md:gap-4 lg:py-0 lg:mt-32 lg:justify-center mb-14"
+>
+  <a
+    href="/blog"
+    class={classNames(
+      !currentPath.includes("blog/category")
+        ? "bg-teal-600 text-white"
+        : "bg-white text-gray-700",
+      "flex whitespace-nowrap justify-center cursor-pointer border border-gray-100 rounded-md p-2 text-base md:text-lg md:p-3 md:rounded-lg lg:text-xl"
+    )}
+  >
+    View All
+  </a>
+  {
+    Categories.map((category) => (
+      <a
+        href={`/blog/category/${category.slug}/1`}
+        class={classNames(
+          currentPath.includes(category.slug)
+            ? "bg-teal-600 text-white"
+            : "bg-white text-gray-700",
+          "flex whitespace-nowrap justify-center cursor-pointer border border-gray-100 rounded-md p-2 text-base md:text-lg md:p-3 md:rounded-lg lg:text-xl"
+        )}
+      >
+        {category.name}
+      </a>
+    ))
+  }
+</nav>

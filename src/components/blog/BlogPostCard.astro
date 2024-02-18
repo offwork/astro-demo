@@ -1,0 +1,65 @@
+---
+import { Image } from "astro:assets";
+import { classNames } from "../../utils";
+import type { PostCard } from "../../models";
+import DateFormatter from "./DateFormatter.astro";
+type Props = PostCard;
+const { ...props } = Astro.props;
+---
+
+<post-card class="grid gap-4">
+  <a
+    href={`/blog/${props.slug}`}
+    aria-label={props.slug}
+    class="grid content-start gap-4"
+  >
+    <div class="relative block w-full rounded-lg overflow-hidden">
+      <Image
+        src={props.coverImage.url}
+        alt={props.coverImage.alt}
+        format="webp"
+        class={classNames(
+          "shadow-sm object-cover object-center z-0",
+          props.slug && "hover:shadow-xl transition-shadow duration-200"
+        )}
+        width={986}
+        height={499}
+      />
+    </div>
+    <div class="grid content-start gap-2">
+      <h2
+        class="text-slate line-clamp-2 font-medium leading-snug min-h-auto text-xl md:min-h-[56px] xl:min-h-[64px] xl:text-2xl">
+        {props.title}
+      </h2>
+      <p
+        class="font-light text-gray-500 text-xs min-h-auto line-clamp-1 md:text-sm xl:text-lg"
+      >
+        <DateFormatter dateString={props.date} />
+        <span class="mx-1">|</span>
+        {props.tags.join(", ")}
+      </p>
+      <p class="line-clamp-3 text-sm text-gray-700 md:text-base xl:text-lg">
+        {props.description}
+      </p>
+    </div>
+  </a>
+</post-card>
+
+<script>
+  class PostCard extends HTMLElement {
+    constructor() {
+      super();
+
+      const anchor = this.querySelector("a");
+      const head = this.querySelector("h2");
+      anchor?.addEventListener("mouseenter", () => {
+        head?.classList.add("underline")
+      });
+      anchor?.addEventListener("mouseleave", () => {
+        head?.classList.remove("underline")
+      });
+    }
+  }
+
+  customElements.define("post-card", PostCard);
+</script>

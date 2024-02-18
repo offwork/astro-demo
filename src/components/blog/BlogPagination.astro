@@ -1,0 +1,64 @@
+---
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
+import { generatePagination } from "../../lib/pagination";
+import { classNames } from "../../utils";
+
+type Props = {
+  current: number;
+  pages: number;
+  link: {
+    href: (page?: number) => string;
+  };
+};
+
+const { current, pages, link } = Astro.props;
+const pagination = generatePagination(current, pages);
+---
+
+<ul class="flex justify-center list-none space-x-1 md:space-x-2">
+  <li
+    class={classNames(
+      current === 1 ? "pointer-events-none text-gray-500" : "",
+      "flex flex-col justify-center"
+    )}
+  >
+    <a href={link.href(current - 1)}>
+      <ChevronLeftIcon className="h-6 w-6" aria-hidden="true" />
+    </a>
+  </li>
+  {
+    pagination.map((item, index) => (
+      <li
+        class={classNames(
+          "border border-gray-100 rounded-lg min-w-[36px] min-h-[36px] flex flex-col justify-center select-none text-gray-700 md:min-w-[40px] md:min-h-[40px] hover:bg-teal-600 hover:text-white",
+          item === current
+            ? "bg-teal-600 text-white pointer-events-none"
+            : "bg-white"
+        )}
+      >
+        {item < 1 ? (
+          <span class="pointer-events-none text-center text-lg md:text-2lx">
+            ...
+          </span>
+        ) : (
+          <a
+            class="text-center text-lg md:text-2xl"
+            href={`${link.href(item)}`}
+          >
+            <span class="">{item}</span>
+          </a>
+        )}
+      </li>
+    ))
+  }
+  <li
+    class={classNames(
+      current === pages ? "pointer-events-none text-gray-500" : "",
+      "flex flex-col justify-center"
+    )}
+  >
+    <a href={link.href(current + 1)}>
+      <ChevronRightIcon className="h-6 w-6" aria-hidden="true" />
+    </a>
+  </li>
+</ul>

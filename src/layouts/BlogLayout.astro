@@ -1,7 +1,7 @@
 ---
 import Layout from './Layout.astro';
 import Searchbox from "../components/blog/Searchbox";
-import CategoryFilter from "../components/blog/CategoryFilter";
+import CategoryFilter from "../components/blog/CategoryNavs.astro";
 ---
 
 <Layout title="Welcome to Astro.">
@@ -23,7 +23,7 @@ import CategoryFilter from "../components/blog/CategoryFilter";
   </div>
   <div class="container relative z-10 w-full mt-16">
     <Searchbox data={[]} gotoPost={(path) => { console.log(path) }} client:visible />
-    <CategoryFilter client:visible />
+    <CategoryFilter />
   </div>
   <slot />
 </Layout>
