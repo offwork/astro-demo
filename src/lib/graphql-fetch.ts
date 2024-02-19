@@ -22,7 +22,8 @@ import {
 } from "./queries";
 
 export const hygraph = new GraphQLClient(
-  "https://api-eu-west-2.hygraph.com/v2/clsabfi4n000008ksabjb48fh/master"
+  // "https://api-eu-west-2.hygraph.com/v2/clsabfi4n000008ksabjb48fh/master"
+  "https://api-eu-west-2.hygraph.com/v2/clqfbelnt021201rq903o0b21/master"
 );
 
 ////////////////////////////////////////////////////////////////////////////
