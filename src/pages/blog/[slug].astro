@@ -1,0 +1,30 @@
+---
+import BlogPostBody from "../../components/blog/BlogPostBody";
+import BlogPostHeader from "../../components/blog/BlogPostHeader.astro";
+import Layout from "../../layouts/Layout.astro";
+import { getAllSlugs, getPost, getRelatedPosts } from "../../lib/graphql-fetch";
+
+const { slug } = Astro.params;
+
+if (!slug) return Astro.redirect("/404");
+
+const allPostSlugs = await getAllSlugs();
+
+if (typeof allPostSlugs.find((value) => value.slug === slug) === "undefined")
+  return Astro.redirect("/404");
+
+const post = await getPost(slug);
+const relatedPosts = await getRelatedPosts(slug);
+---
+
+<Layout title="Welcome to Astro." visibleVideo={false}>
+  <section class="max-w-4xl mx-auto mb-20">
+    <BlogPostHeader
+      coverImage={post.coverImage!}
+      date={post.date}
+      tags={post.tags}
+      title={post.title}
+    />
+    <BlogPostBody content={post.content.markdown} />
+  </section>
+</Layout>

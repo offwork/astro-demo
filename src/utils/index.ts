@@ -2,6 +2,9 @@
 ///////////////////////                        ///////////////////////
 /////////////////          HELPER METHODS          ///////////////////
 ///////////////////////                        ///////////////////////
+
+import type { ImageLoaderProps } from "../models";
+
 //////////////////////////////////////////////////////////////////////
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -24,6 +27,18 @@ const capitalize = (str: string) => {
       : [""];
   return words.join().replace(/[\s,]/g, " ");
 };
+
+const graphAssetsLoader = ({
+  src,
+  width,
+}: ImageLoaderProps) => {
+  const relativeSrc = (src: string) => src.split('/').pop();
+  return `https://media.graphassets.com/resize=fit:max,width:${width}/output=format:webp/${relativeSrc(
+    src
+  )}`;
+  // return `https://media.graphassets.com/resize=fit:max,height:499,width:896/output=format:webp/${relativeSrc(src)}`;
+};
+
 
 function transformObjectToParams(object: {
   [key: string]: string | number | undefined | null;
@@ -48,5 +63,6 @@ export {
   capitalize,
   classNames,
   isEmptyObject,
+  graphAssetsLoader,
   transformObjectToParams,
 };

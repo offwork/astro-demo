@@ -8,6 +8,12 @@ type Breadcrumbs = {
   href: string;
 };
 
+type ImageLoaderProps = {
+  src: string;
+  width: number;
+  quality?: number;
+};
+
 type IPAddress = {
   ipVersion: number;
   ipAddress: string;
@@ -68,6 +74,7 @@ type ObjectPosition =
 export type {
   Breadcrumbs,
   HubspotFormData,
+  ImageLoaderProps,
   IPAddress,
   ObjectFit,
   ObjectPosition,

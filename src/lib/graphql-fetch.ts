@@ -1,9 +1,24 @@
-import type { GraphCategoryHeroPotsDoc, GraphCategoryPotsDoc, GraphSearchDoc } from "../models";
 import { GraphQLClient } from "graphql-request";
+import { PER_PAGE_SIZE } from "../constants";
+import type {
+  GraphCategoryHeroPotsDoc,
+  GraphCategoryPotsDoc,
+  GraphLatestPostsDoc,
+  GraphPostDoc,
+  GraphPostsDoc,
+  GraphRelatedPostDoc,
+  GraphSearchDoc,
+  GraphSlugsDoc,
+} from "../models";
 import {
-  categoryPostsWithPaginationQuery,
-  searchPostWithTitleQuery,
+  allBlogPostQueries,
+  allPostsSlugQuery,
   categoryHeroPostsQuery,
+  categoryPostsWithPaginationQuery,
+  latestBlogPostsQuery,
+  postWithSlugQuery,
+  relatedPostsQuery,
+  searchPostWithTitleQuery,
 } from "./queries";
 
 export const hygraph = new GraphQLClient(
@@ -54,4 +69,48 @@ export const getCategoryHeroPots = async (slug: string) => {
       where: { slug: slug },
     })
     .then((response) => response.category.heroPosts);
+};
+
+export const getAllBlogPots = async (skip = 0) => {
+  return await hygraph
+    .request<GraphPostsDoc>(allBlogPostQueries, {
+      first: PER_PAGE_SIZE,
+      skip: skip,
+      orderBy: "date_DESC",
+    })
+    .then((response) => response);
+};
+
+export const getLatestBlogPosts = async () => {
+  return await hygraph
+    .request<GraphLatestPostsDoc>(latestBlogPostsQuery)
+    .then((response) => response.posts);
+};
+
+export const getAllSlugs = async () => {
+  return Promise.all([
+    await hygraph.request<GraphSlugsDoc>(allPostsSlugQuery, {
+      first: 75,
+      skip: 0,
+    }),
+    await hygraph.request<GraphSlugsDoc>(allPostsSlugQuery, {
+      first: 75,
+      skip: 75,
+    }),
+  ]).then(([first, second]) => [...first.posts, ...second.posts]);
+};
+
+export const getPost = async (slug: string) => {
+  return await hygraph
+    .request<GraphPostDoc>(postWithSlugQuery, {
+      where: { slug: slug },
+    })
+    .then((response) => response.post);
+};
+
+
+export const getRelatedPosts = async (slug: string) => {
+  return await hygraph
+    .request<GraphRelatedPostDoc>(relatedPostsQuery, { where: { slug: slug } })
+    .then((response) => response.posts[0].relations[0].relatedPosts);
 };

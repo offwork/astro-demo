@@ -1,7 +1,38 @@
 ---
-import BlogLayout from '../../layouts/BlogLayout.astro';
+import BlogPagination from "../../components/blog/BlogPagination.astro";
+import BlogPostCard from "../../components/blog/BlogPostCard.astro";
+import HeroPosts from "../../components/blog/HeroPosts.astro";
+import { PER_PAGE_SIZE } from "../../constants";
+import BlogLayout from "../../layouts/BlogLayout.astro";
+import { getAllBlogPots, getLatestBlogPosts } from "../../lib/graphql-fetch";
+
+const postsResult = await getAllBlogPots();
+const { aggregate } = postsResult.postsConnection;
+const pages = Math.ceil(aggregate.count / PER_PAGE_SIZE);
+const heroPostsResult = await getLatestBlogPosts();
+const posts = postsResult.postsConnection.edges.map((post) => post.node);
 ---
 
 <BlogLayout title="Welcome to Astro.">
-
+  <section class="container mb-20">
+    <HeroPosts heroPosts={heroPostsResult} />
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-12 mt-12"
+    >
+      {posts.map((post) => <BlogPostCard {...post} />)}
+    </div>
+    {
+      aggregate.count > 9 && (
+        <div class="container mt-10 lg:mt-20">
+          <BlogPagination
+            current={1}
+            pages={pages}
+            link={{
+              href: (page) => `/blog/page/${page}`,
+            }}
+          />
+        </div>
+      )
+    }
+  </section>
 </BlogLayout>

@@ -2,41 +2,25 @@
 import BlogPagination from "../../../components/blog/BlogPagination.astro";
 import BlogPostCard from "../../../components/blog/BlogPostCard.astro";
 import HeroPosts from "../../../components/blog/HeroPosts.astro";
-import { Categories, PER_PAGE_SIZE } from "../../../constants";
+import { PER_PAGE_SIZE } from "../../../constants";
 import BlogLayout from "../../../layouts/BlogLayout.astro";
-import {
-  getBlogCategoryPots,
-  getCategoryHeroPots,
-} from "../../../lib/graphql-fetch";
+import { getAllBlogPots, getLatestBlogPosts } from "../../../lib/graphql-fetch";
 
-const { category } = Astro.params;
-const catSlug = category ? category.split("/")[0] : "";
-if (!Categories.map((cat) => cat.slug).includes(catSlug)) {
-  return Astro.redirect("/404");
-}
+const { page } = Astro.params;
 
-if (
-  isNaN(Number(category?.split("/")[1])) ||
-  Number(category?.split("/")[1]) <= 0
-)
-  return Astro.redirect("/404");
+if (isNaN(Number(page)) || Number(page) <= 0) return Astro.redirect("/404");
 
 const pageNum =
-  Number(category?.split("/")[1]) === 2
+  Number(page) === 2
     ? PER_PAGE_SIZE
-    : Number(category?.split("/")[1]) * PER_PAGE_SIZE - PER_PAGE_SIZE;
+    : Number(page) * PER_PAGE_SIZE - PER_PAGE_SIZE;
 
-const postsResult = await getBlogCategoryPots(
-  PER_PAGE_SIZE,
-  pageNum,
-  "date_ASC",
-  catSlug
-);
-const currentPage = Number(category?.split("/")[1]);
+const currentPage = Number(page);
+const postsResult = await getAllBlogPots(pageNum);
 const { aggregate } = postsResult.postsConnection;
 const pages = Math.ceil(aggregate.count / PER_PAGE_SIZE);
-if (Number(category?.split("/")[1]) > pages) return Astro.redirect("/404");
-const heroPostsResult = await getCategoryHeroPots(catSlug);
+if (Number(page) > pages) return Astro.redirect("/404");
+const heroPostsResult = await getLatestBlogPosts();
 const posts = postsResult.postsConnection.edges.map((post) => post.node);
 ---
 
@@ -55,7 +39,7 @@ const posts = postsResult.postsConnection.edges.map((post) => post.node);
             current={currentPage}
             pages={pages}
             link={{
-              href: (page) => `/blog/category/${catSlug}/${page}`,
+              href: (page) => `/blog/page/${page}`,
             }}
           />
         </div>

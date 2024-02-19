@@ -1,0 +1,35 @@
+---
+import type { CoverImage } from "../../models";
+import DateFormatter from "./DateFormatter.astro";
+import { Image } from "astro:assets";
+
+type Props = {
+  coverImage?: CoverImage;
+  date: string;
+  tags: string[];
+  title: string;
+};
+
+const { coverImage, date, tags, title } = Astro.props;
+---
+<Fragment>
+  <p class="font-light text-gray-600 whitespace-normal text-center text-base mb-3 md:text-xl md:whitespace-nowrap">
+    <DateFormatter dateString={date} />
+    <span class="mx-1">|</span>
+    {tags.join(", ")}
+  </p>
+  <h1 class="font-medium text-slate text-center text-2xl lg:text-5xl lg:leading-relaxed">
+    {title}
+  </h1>
+  <div class="relative flex h-full w-full items-center justify-center rounded-lg overflow-hidden my-10 lg:my-20">
+    {coverImage && coverImage.url.length > 1 && (
+      <Image
+        src={coverImage.url}
+        alt={coverImage.alt || "unnamed blog post image"}
+        width={coverImage.width || 0}
+        height={coverImage.height || 0}
+        class="relative h-full w-full object-contain object-center"    
+      />
+    )}
+  </div>
+</Fragment>
